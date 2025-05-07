@@ -250,6 +250,74 @@ export const translations: Record<string, Record<string, string>> = {
       es: 'Seleccionar modelo de dieta',
       fr: 'Choisir un modèle de régime',
     },
+    sex: {
+      pl: 'Płeć',
+      en: 'Sex',
+      de: 'Geschlecht',
+      ua: 'Стать',
+      ru: 'Пол',
+      zh: '性别',
+      hi: 'लिंग',
+      ar: 'الجنس',
+      he: 'מין',
+      es: 'Género',
+      fr: 'Sexe',
+    },
+    selectDiseaseGroups: {
+      pl: 'Wybierz grupy chorób',
+      en: 'Select disease groups',
+      es: 'Selecciona grupos de enfermedades',
+      fr: 'Sélectionnez des groupes de maladies',
+      de: 'Wählen Sie Krankheitsgruppen',
+      ua: 'Оберіть групи захворювань',
+      ru: 'Выберите группы заболеваний',
+      zh: '选择疾病组',
+      hi: 'रोग समूह चुनें',
+      ar: 'اختر مجموعات الأمراض',
+      he: 'בחר קבוצות מחלות'
+    },
+    
+    selectConditions: {
+      pl: 'Wybierz choroby',
+      en: 'Select conditions',
+      es: 'Selecciona enfermedades',
+      fr: 'Sélectionnez des maladies',
+      de: 'Wählen Sie Krankheiten',
+      ua: 'Оберіть хвороби',
+      ru: 'Выберите заболевания',
+      zh: '选择疾病',
+      hi: 'रोग चुनें',
+      ar: 'اختر الأمراض',
+      he: 'בחר מחלות'
+    },
+    
+    testResults: {
+      pl: 'Wyniki badań',
+      en: 'Test results',
+      es: 'Resultados de las pruebas',
+      fr: 'Résultats des tests',
+      de: 'Testergebnisse',
+      ua: 'Результати аналізів',
+      ru: 'Результаты анализов',
+      zh: '检测结果',
+      hi: 'परीक्षण परिणाम',
+      ar: 'نتائج الاختبارات',
+      he: 'תוצאות בדיקות'
+    },
+    
+    interviewTitle: {
+      pl: 'Wywiad z pacjentem',
+      en: 'Patient interview',
+      es: 'Entrevista con el paciente',
+      fr: 'Entretien avec le patient',
+      de: 'Patienteninterview',
+      ua: 'Опитування пацієнта',
+      ru: 'Опрос пациента',
+      zh: '病人访谈',
+      hi: 'मरीज का साक्षात्कार',
+      ar: 'مقابلة مع المريض',
+      he: 'ראיון עם המטופל'
+    }
     
     
   };

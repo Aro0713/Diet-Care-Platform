@@ -213,21 +213,22 @@ export default function SelectGoalForm({ selectedGoals, setSelectedGoals, lang }
 
   return (
     <div className="mt-4">
-      <label className="block font-semibold mb-1">
-        {lang === 'pl' ? 'Wybierz cele diety:' : 'Select diet goals:'}
-      </label>
-      <select
-        multiple
-        className="w-full border px-2 py-1"
-        value={selectedGoals}
-        onChange={handleChange}
-      >
-        {Object.entries(goalLabels).map(([key, labels]) => (
-          <option key={key} value={key}>
-            {labels[lang] || labels.pl}
-          </option>
-        ))}
-      </select>
-    </div>
+  <label className="block font-semibold mb-1">
+    {lang === 'pl' ? 'Wybierz cele diety:' : 'Select diet goals:'}
+  </label>
+  <select
+    multiple
+    className="w-full border px-2 py-1"
+    value={selectedGoals}
+    onChange={handleChange}
+  >
+    {Object.entries(goalLabels).map(([key, labels]) => (
+      <option key={key} value={key}>
+        {labels[lang] || labels.pl}
+      </option>
+    ))}
+  </select>
+</div>
+
   );
 }

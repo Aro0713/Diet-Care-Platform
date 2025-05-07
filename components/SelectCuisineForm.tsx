@@ -1,5 +1,5 @@
 import React from 'react';
-import { LangKey, translations } from '../utils/i18n';
+import { LangKey, getTranslation, translations} from '../utils/i18n';
 
 interface Props {
   onChange: (value: string) => void;
@@ -235,7 +235,7 @@ const cuisineKeys = Object.keys(cuisineLabels);
 
 export default function SelectCuisineForm({ onChange, lang }: Props) {
   const t = (key: keyof typeof translations) =>
-    translations[key]?.[lang] || translations[key]?.pl || key;
+    getTranslation(translations, key, lang);
 
   return (
     <div className="mt-4">
@@ -245,7 +245,7 @@ export default function SelectCuisineForm({ onChange, lang }: Props) {
         defaultValue=""
         onChange={(e) => onChange(e.target.value)}
       >
-        <option value="">-- {t('selectCuisine')} --</option>
+        <option value="">{`-- ${t('selectCuisine')} --`}</option>
         {cuisineKeys.map((key) => (
           <option key={key} value={key}>
             {cuisineLabels[key]?.[lang] || cuisineLabels[key]?.pl || key}
