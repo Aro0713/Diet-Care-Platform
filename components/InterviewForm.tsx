@@ -1,113 +1,209 @@
 import React, { useState, useEffect } from 'react';
-import SectionGoals from './SectionGoals';
-import SectionLifestyle from './SectionLifestyle';
-import SectionFoodHabits from './SectionFoodHabits';
-import SectionDigestion from './SectionDigestion';
-import SectionHormonal from './SectionHormonal';
 import { generateInterviewPdf } from '../utils/generateInterviewPdf';
 import { PatientData, Meal } from '@/types';
+import { LangKey, translations } from '../utils/i18n';
+
+import SectionBasic from './SectionBasic';
+import SectionHealth from './SectionHealth';
+import SectionLifestyle from './SectionLifestyle';
+import SectionFoodHabits from './SectionFoodHabits';
+import SectionPreferences from './SectionPreferences';
+import SectionWeightHistory from './SectionWeightHistory';
+import SectionDigestion from './SectionDigestion';
+import SectionMotivation from './SectionMotivation';
+import SectionWomenOnly from './SectionWomenOnly';
 
 interface Props {
-  onChange: (data: any) => void;
+  onChange: (data: InterviewData) => void;
   form: PatientData;
   bmi: number | null;
   editableDiet: Record<string, Meal[]>;
+  lang: LangKey;
 }
 
-interface InterviewData {
-  expectations: string;
-  previousDiets: string;
-  currentDiet: string;
-  goals: string[];
-  chronicDiseases: string;
-  medications: string;
-  supplements: string;
+// === Typy sekcji ===
+interface Section1BasicData {
+  [key: string]: string;
+}
+interface Section2HealthData {
+  [key: string]: string;
+}
+interface Section3LifestyleData {
   activity: string;
   sleep: string;
   stress: string;
   smoking: string;
   alcohol: string;
   caffeine: string;
+}
+interface Section4FoodHabitsData {
   mealsPerDay: string;
   mealTimes: string;
-  snacking: string;
-  breakfast: string;
-  sweets: string;
-  water: string;
-  processedFood: string;
-  cookingHabits: string;
-  foodFrequencies: string;
-  foodPreferences: string;
+  waterIntake: string;
+  sugarCravings: string;
+  fastFoodFrequency: string;
+  excludedFoods: string;
+}
+interface Section5PreferencesData {
+  likedFoods: string;
+  dislikedFoods: string;
   intolerances: string;
-  digestiveIssues: string;
-  bowelFrequency: string;
-  diagnosedConditions: string;
-  motivation: number;
+  allergies: string;
+  supplements: string;
+  medications: string;
+}
+interface Section6WeightHistoryData {
+  currentWeight: string;
+  height: string;
+  weightChange: string;
+  weightProblems: string;
+  weightLossAttempts: string;
+}
+interface Section7DigestionData {
+  digestion: string;
+  bloating: string;
+  constipation: string;
+  diarrhea: string;
+  heartburn: string;
+  other: string;
+}
+interface Section8MotivationData {
+  motivation: string;
   barriers: string;
-  timeAvailable: string;
-  budgetLimits: string;
-  otherNotes: string;
+  supportSystem: string;
+  expectations: string;
+}
+interface Section9WomenOnlyData {
   menstrualCycle: string;
   hormonalIssues: string;
-  pregnancyOrBreastfeeding: string;
+  pregnancy: string;
+  breastfeeding: string;
   contraception: string;
 }
 
-interface Props {
-  onChange: (data: any) => void;
-  form: PatientData;
-  bmi: number | null;
-  editableDiet: Record<string, Meal[]>;
+export interface InterviewData {
+  section1: Section1BasicData;
+  section2: Section2HealthData;
+  section3: Section3LifestyleData;
+  section4: Section4FoodHabitsData;
+  section5: Section5PreferencesData;
+  section6: Section6WeightHistoryData;
+  section7: Section7DigestionData;
+  section8: Section8MotivationData;
+  section9: Section9WomenOnlyData | undefined;
 }
 
-export default function InterviewForm({ onChange, form, bmi, editableDiet }: Props) {
+export default function InterviewForm({ onChange, form, bmi, editableDiet, lang }: Props) {
   const [data, setData] = useState<InterviewData>({
-    expectations: '',
-    previousDiets: '',
-    currentDiet: '',
-    goals: [],
-    chronicDiseases: '',
-    medications: '',
-    supplements: '',
-    activity: '',
-    sleep: '',
-    stress: '',
-    smoking: '',
-    alcohol: '',
-    caffeine: '',
-    mealsPerDay: '',
-    mealTimes: '',
-    snacking: '',
-    breakfast: '',
-    sweets: '',
-    water: '',
-    processedFood: '',
-    cookingHabits: '',
-    foodFrequencies: '',
-    foodPreferences: '',
-    intolerances: '',
-    digestiveIssues: '',
-    bowelFrequency: '',
-    diagnosedConditions: '',
-    motivation: 5,
-    barriers: '',
-    timeAvailable: '',
-    budgetLimits: '',
-    otherNotes: '',
-    menstrualCycle: '',
-    hormonalIssues: '',
-    pregnancyOrBreastfeeding: '',
-    contraception: '',
+    section1: { '1.1': '', '1.2': '', '1.3': '', '1.4': '' },
+    section2: { '2.1': '', '2.2': '', '2.3': '', '2.4': '' },
+    section3: {
+      activity: '',
+      sleep: '',
+      stress: '',
+      smoking: '',
+      alcohol: '',
+      caffeine: ''
+    },
+    section4: {
+      mealsPerDay: '',
+      mealTimes: '',
+      waterIntake: '',
+      sugarCravings: '',
+      fastFoodFrequency: '',
+      excludedFoods: ''
+    },
+    section5: {
+      likedFoods: '',
+      dislikedFoods: '',
+      intolerances: '',
+      allergies: '',
+      supplements: '',
+      medications: ''
+    },
+    section6: {
+      currentWeight: '',
+      height: '',
+      weightChange: '',
+      weightProblems: '',
+      weightLossAttempts: ''
+    },
+    section7: {
+      digestion: '',
+      bloating: '',
+      constipation: '',
+      diarrhea: '',
+      heartburn: '',
+      other: ''
+    },
+    section8: {
+      motivation: '',
+      barriers: '',
+      supportSystem: '',
+      expectations: ''
+    },
+    section9: form.sex === 'female'
+      ? {
+          menstrualCycle: '',
+          hormonalIssues: '',
+          pregnancy: '',
+          breastfeeding: '',
+          contraception: ''
+        }
+      : undefined
   });
 
-  // ✅ Poprawione — teraz TS akceptuje string jako nazwę pola
-  function handleFieldChange(field: string, value: any) {
-    setData((prev) => ({ ...prev, [field]: value }));
-  }
+  useEffect(() => {
+    if (form.sex === 'female' && !data.section9) {
+      setData(prev => ({
+        ...prev,
+        section9: {
+          menstrualCycle: '',
+          hormonalIssues: '',
+          pregnancy: '',
+          breastfeeding: '',
+          contraception: ''
+        }
+      }));
+    }
+  }, [form.sex, data.section9]);
+
+  const handleFieldChange = <K extends keyof InterviewData>(
+    section: K,
+    key: keyof InterviewData[K],
+    value: string
+  ) => {
+    setData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [key]: value
+      } as InterviewData[K]
+    }));
+  };
+
+  // Osobna funkcja tylko dla section9 (kobiety)
+  const handleSection9Change = (
+    key: keyof Section9WomenOnlyData,
+    value: string
+  ) => {
+    if (data.section9) {
+      setData(prev => ({
+        ...prev,
+        section9: {
+          ...prev.section9!,
+          [key]: value
+        }
+      }));
+    }
+  };
 
   useEffect(() => {
     onChange(data);
   }, [data, onChange]);
+
+  const t = (key: keyof typeof translations): string =>
+    translations[key]?.[lang] || translations[key]?.pl || key;
 
   const handleSendToPatient = () => {
     const record = {
@@ -115,77 +211,81 @@ export default function InterviewForm({ onChange, form, bmi, editableDiet }: Pro
       date: new Date().toLocaleString(),
       interview: data
     };
-
     const history = JSON.parse(localStorage.getItem('interviewHistory') || '[]');
     history.push(record);
     localStorage.setItem('interviewHistory', JSON.stringify(history));
-
-    alert('📤 Wywiad został zapisany i wysłany pacjentowi (symulacja)');
+    alert('📤 ' + t('sendToPatient'));
   };
 
   return (
-    <div className='bg-white p-4 rounded shadow space-y-4 mt-6'>
-      <h2 className='text-xl font-bold'>Wywiad dietetyczny – podstawowe informacje</h2>
+    <div className="bg-white p-4 rounded shadow space-y-4 mt-6">
+      <h2 className="text-xl font-bold">{t('interviewTitle')}</h2>
 
-      <SectionGoals data={data} onChange={handleFieldChange} />
-      <SectionLifestyle data={data} onChange={handleFieldChange} />
-      <SectionFoodHabits data={data} onChange={handleFieldChange} />
-      <SectionDigestion data={data} onChange={handleFieldChange} />
-      <SectionHormonal data={data} onChange={handleFieldChange} />
-
-      <div>
-        <label className='block font-semibold'>Oczekiwania względem współpracy:</label>
-        <textarea
-          className='w-full border px-2 py-1'
-          value={data.expectations}
-          onChange={(e) => handleFieldChange('expectations', e.target.value)}
+      <SectionBasic
+        data={data.section1}
+        onChange={(key, value) => handleFieldChange('section1', key, value)}
+        lang={lang}
+      />
+      <SectionHealth
+        data={data.section2}
+        onChange={(key, value) => handleFieldChange('section2', key, value)}
+        lang={lang}
+      />
+      <SectionLifestyle
+        data={data.section3}
+        onChange={(key, value) => handleFieldChange('section3', key, value)}
+        lang={lang}
+      />
+      <SectionFoodHabits
+        data={data.section4}
+        onChange={(key, value) => handleFieldChange('section4', key, value)}
+        lang={lang}
+      />
+      <SectionPreferences
+        data={data.section5}
+        onChange={(key, value) => handleFieldChange('section5', key, value)}
+        lang={lang}
+      />
+      <SectionWeightHistory
+        data={data.section6}
+        onChange={(key, value) => handleFieldChange('section6', key, value)}
+        lang={lang}
+      />
+      <SectionDigestion
+        data={data.section7}
+        onChange={(key, value) => handleFieldChange('section7', key, value)}
+        lang={lang}
+      />
+      <SectionMotivation
+        data={data.section8}
+        onChange={(key, value) => handleFieldChange('section8', key, value)}
+        lang={lang}
+      />
+      {form.sex === 'female' && data.section9 && (
+        <SectionWomenOnly
+          data={data.section9}
+          onChange={handleSection9Change}
+          lang={lang}
         />
-      </div>
+      )}
 
-      <div>
-        <label className='block font-semibold'>Czy była Pani/Pan wcześniej na diecie? Jakie efekty?</label>
-        <textarea
-          className='w-full border px-2 py-1'
-          value={data.previousDiets}
-          onChange={(e) => handleFieldChange('previousDiets', e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label className='block font-semibold'>Czy obecnie stosuje Pani/Pan jakąś dietę?</label>
-        <textarea
-          className='w-full border px-2 py-1'
-          value={data.currentDiet}
-          onChange={(e) => handleFieldChange('currentDiet', e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label className='block font-semibold'>Czy są inne uwagi, o których powinniśmy wiedzieć?</label>
-        <textarea
-          className='w-full border px-2 py-1'
-          value={data.otherNotes}
-          onChange={(e) => handleFieldChange('otherNotes', e.target.value)}
-        />
-      </div>
-
-      <div className='flex gap-4 pt-4'>
+      <div className="flex gap-4 pt-4">
         <button
-          onClick={() => generateInterviewPdf(form, bmi, Object.values(editableDiet).flat())}
-
-          className='bg-green-700 text-white px-4 py-2 rounded'
+          onClick={() =>
+            generateInterviewPdf(form, bmi, Object.values(editableDiet).flat())
+          }
+          className="bg-green-700 text-white px-4 py-2 rounded"
         >
-          📄 Pobierz wywiad jako PDF
+          📄 {t('pdf')}
         </button>
 
         <button
           onClick={handleSendToPatient}
-          className='bg-blue-600 text-white px-4 py-2 rounded'
+          className="bg-blue-600 text-white px-4 py-2 rounded"
         >
-          ✉️ Zapisz i wyślij pacjentowi
+          ✉️ {t('sendToPatient')}
         </button>
       </div>
     </div>
   );
 }
-export {}; // ← dodaj na końcu pliku lub na początku

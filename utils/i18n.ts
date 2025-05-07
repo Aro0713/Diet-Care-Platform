@@ -1,4 +1,6 @@
-// utils/i18n.ts
+export type LangKey =
+| 'pl' | 'en' | 'es' | 'fr' | 'de'
+| 'ua' | 'ru' | 'zh' | 'hi' | 'ar' | 'he';
 
 export const translations: Record<string, Record<string, string>> = {
     title: {
@@ -13,6 +15,19 @@ export const translations: Record<string, Record<string, string>> = {
       he: 'פאנל רופא / דיאטן',
       es: 'Panel de Médico / Dietista',
       fr: 'Panneau Médecin / Diététicien',
+    },
+    section1_title: {
+      pl: "Dane podstawowe i cel wizyty",
+      en: "Basic data and visit goal",
+      de: "Grunddaten und Besuchsziel",
+      ua: "Основні дані та мета візиту",
+      ru: "Основные данные и цель визита",
+      fr: "Données de base et objectif de la visite",
+      es: "Datos básicos y objetivo de la visita",
+      ar: "البيانات الأساسية وهدف الزيارة",
+      he: "נתונים בסיסיים ומטרת הביקור",
+      hi: "मूल डेटा और विज़िट का उद्देश्य",
+      zh: "基本信息和就诊目的",
     },
     subtitle: {
       pl: 'Wprowadź dane pacjenta i wygeneruj dietę',
@@ -221,10 +236,29 @@ export const translations: Record<string, Record<string, string>> = {
       he: 'השמנת יתר',
       es: 'obesidad',
       fr: 'obésité',
-    }
+    },
+    selectModel: {
+      pl: 'Wybierz model diety',
+      en: 'Select diet model',
+      de: 'Modell auswählen',
+      ua: 'Оберіть модель дієти',
+      ru: 'Выберите модель диеты',
+      zh: '选择饮食模式',
+      hi: 'आहार मॉडल चुनें',
+      ar: 'اختر نموذج النظام الغذائي',
+      he: 'בחר מודל תזונה',
+      es: 'Seleccionar modelo de dieta',
+      fr: 'Choisir un modèle de régime',
+    },
+    
+    
   };
   
-  export function getTranslation(lang: string, key: string): string {
-    return translations[key]?.[lang] || translations[key]?.['pl'] || key;
-  }
+  export function getTranslation<
+  T extends Record<string, Record<LangKey, string>>,
+  K extends keyof T
+>(source: T, key: K, lang: LangKey): string {
+  return source[key]?.[lang] || source[key]?.['pl'] || (key as string);
+}
+
   

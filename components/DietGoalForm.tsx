@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import SelectDietGoalForm from './SelectDietGoalForm';
+import { LangKey } from '../utils/translations';
 
 interface Props {
   onChange: (value: string) => void;
-  lang: string;
+  lang: LangKey;
 }
 
-const translations: {
-  label: Record<string, string>;
-  groups: Record<string, Record<string, string>>;
-} = {
+const goalTranslations = {
   label: {
     pl: 'Wybierz cel diety:',
     en: 'Select a diet goal:',
@@ -21,7 +19,7 @@ const translations: {
     zh: '选择饮食目标：',
     hi: 'आहार लक्ष्य चुनें:',
     ar: 'اختر هدف النظام الغذائي:',
-    he: 'בחר מטרה תזונתית:'
+    he: 'בחר מטרה תזונתית:',
   },
   groups: {
     lose: {
@@ -35,7 +33,7 @@ const translations: {
       zh: '减重',
       hi: 'वजन घटाना',
       ar: 'فقدان الوزن',
-      he: 'ירידה במשקל'
+      he: 'ירידה במשקל',
     },
     gain: {
       pl: 'Na masę',
@@ -48,7 +46,7 @@ const translations: {
       zh: '增肌',
       hi: 'मांसपेशियों की वृद्धि',
       ar: 'زيادة الكتلة العضلية',
-      he: 'עלייה במסת שריר'
+      he: 'עלייה במסת שריר',
     },
     maintain: {
       pl: 'Stabilizujące wagę',
@@ -61,7 +59,7 @@ const translations: {
       zh: '维持体重',
       hi: 'वजन बनाए रखना',
       ar: 'الحفاظ على الوزن',
-      he: 'שמירה על משקל'
+      he: 'שמירה על משקל',
     },
     detox: {
       pl: 'Detoksykacyjne / oczyszczające',
@@ -74,7 +72,7 @@ const translations: {
       zh: '排毒 / 清洁',
       hi: 'डिटॉक्स / सफाई',
       ar: 'إزالة السموم / تطهير',
-      he: 'ניקוי רעלים'
+      he: 'ניקוי רעלים',
     },
     regen: {
       pl: 'Regeneracyjne',
@@ -87,7 +85,7 @@ const translations: {
       zh: '恢复性',
       hi: 'पुनर्जनन',
       ar: 'تجديدي',
-      he: 'משקם'
+      he: 'משקם',
     },
     liver: {
       pl: 'Poprawa pracy wątroby',
@@ -100,7 +98,7 @@ const translations: {
       zh: '肝脏支持',
       hi: 'लीवर समर्थन',
       ar: 'دعم الكبد',
-      he: 'תמיכה בכבד'
+      he: 'תמיכה בכבד',
     },
     kidney: {
       pl: 'Poprawa pracy nerek',
@@ -113,41 +111,45 @@ const translations: {
       zh: '肾脏支持',
       hi: 'किडनी समर्थन',
       ar: 'دعم الكلى',
-      he: 'תמיכה בכליות'
-    }
-  }
+      he: 'תמיכה בכליות',
+    },
+  },
 };
 
 export default function DietGoalForm({ onChange, lang }: Props) {
-  const [selectedGroup, setSelectedGroup] = useState<string>('');
+  const [selectedGroup, setSelectedGroup] = useState<keyof typeof goalTranslations.groups | ''>('');
 
-  const handleGroupChange = (group: string) => {
-    setSelectedGroup(group);
-    onChange(group);
-  };
+  const t = (key: keyof typeof goalTranslations.label): string =>
+    goalTranslations.label[key] || goalTranslations.label.pl;
 
-  const translatedGoals: Record<string, string> = Object.keys(translations.groups).reduce(
+  const tGoal = (key: keyof typeof goalTranslations.groups): string =>
+    goalTranslations.groups[key][lang] || goalTranslations.groups[key].pl || key;
+
+  const translatedGoals: Record<string, string> = Object.keys(goalTranslations.groups).reduce(
     (acc, key) => {
-      acc[key] =
-        translations.groups[key][lang] ||
-        translations.groups[key].pl ||
-        key;
+      const goalKey = key as keyof typeof goalTranslations.groups;
+      acc[key] = tGoal(goalKey);
       return acc;
     },
     {} as Record<string, string>
   );
 
   return (
-    <div className="bg-white p-4 rounded shadow mt-6 space-y-6">
+    <div className="bg-white p-4 rounded shadow mt-6 space-y-4">
       <label className="block font-semibold mb-1">
-        {translations.label[lang] || translations.label.pl}
+        {t(lang)}
       </label>
 
       <SelectDietGoalForm
-        selectedGoals={[selectedGroup]}
-        setSelectedGoals={(groups) => handleGroupChange(groups[0])}
-        groupedDietGoals={translatedGoals}
-      />
+  selectedGoals={[selectedGroup]}
+  setSelectedGoals={(groups) => {
+    const selected = groups[0] as keyof typeof goalTranslations.groups;
+    setSelectedGroup(selected);
+    onChange(selected);
+  }}
+  groupedDietGoals={translatedGoals}
+/>
+
     </div>
   );
 }

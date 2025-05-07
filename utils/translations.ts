@@ -2,7 +2,40 @@ export type LangKey = 'pl' | 'en' | 'es' | 'fr' | 'de' | 'ua' | 'ru' | 'zh' | 'h
 
 export type TranslationKey = keyof typeof translations;
 
-export const translations: Record<string, Record<LangKey, string>> = {
+import { section1 } from '../components/utils/translations/interview/section1';
+import { section2 } from '../components/utils/translations/interview/section2';
+import { section3 } from '../components/utils/translations/interview/section3';
+import { section4 } from '../components/utils/translations/interview/section4';
+import { section5 } from '../components/utils/translations/interview/section5';
+import { section6 } from '../components/utils/translations/interview/section6';
+import { section7 } from '../components/utils/translations/interview/section7';
+import { section8 } from '../components/utils/translations/interview/section8';
+import { section9 } from '../components/utils/translations/interview/section9';
+
+
+export const translations = {
+  section1,
+  section2,
+  section3,
+  section4,
+  section5,
+  section6,
+  section7,
+  section8,
+  section9
+} as const;
+
+export const getTranslation = <
+  Source extends Record<string, Record<LangKey, string>>
+>(
+  source: Source,
+  key: keyof Source,
+  lang: LangKey
+): string => {
+  return source[key]?.[lang] ?? (key as string);
+};
+
+export const translationsUI: Record<string, Record<LangKey, string>> = {
   title: {
       pl: 'Panel Lekarza / Dietetyka',
       en: 'Doctor / Dietitian Panel',
@@ -471,7 +504,7 @@ export const translations: Record<string, Record<LangKey, string>> = {
       ar: "مأكولات عالمية",
       he: "מטבח עולמי"
     },    
-    sselectModel: {
+    selectModel: {
       pl: "Model diety",
       en: "Diet model",
       ua: "Модель дієти",
@@ -484,4 +517,57 @@ export const translations: Record<string, Record<LangKey, string>> = {
       ar: "نموذج النظام الغذائي",
       he: "מודל תזונה"
   },
-};
+  normalResult: {
+    pl: 'W normie',
+    en: 'Within range',
+    es: 'Dentro del rango',
+    fr: 'Dans la norme',
+    de: 'Im Normbereich',
+    ua: 'У межах норми',
+    ru: 'В пределах нормы',
+    zh: '在正常范围内',
+    hi: 'सामान्य सीमा में',
+    ar: 'ضمن النطاق',
+    he: 'בתוך הטווח התקני'
+  },
+  abnormalResult: {
+    pl: 'Poza normą',
+    en: 'Out of range',
+    es: 'Fuera del rango',
+    fr: 'Hors norme',
+    de: 'Außerhalb des Normbereichs',
+    ua: 'Поза межами норми',
+    ru: 'Вне нормы',
+    zh: '超出范围',
+    hi: 'सीमा से बाहर',
+    ar: 'خارج النطاق',
+    he: 'מחוץ לטווח התקני'
+  },
+  unknownRange: {
+    pl: 'Nieznany zakres',
+    en: 'Unknown range',
+    es: 'Rango desconocido',
+    fr: 'Plage inconnue',
+    de: 'Unbekannter Bereich',
+    ua: 'Невідомий діапазон',
+    ru: 'Неизвестный диапазон',
+    zh: '未知范围',
+    hi: 'अज्ञात सीमा',
+    ar: 'نطاق غير معروف',
+    he: 'טווח לא ידוע'
+  },
+  selectModelForm: {
+    pl: 'Wybierz model diety',
+    en: 'Select diet model',
+    de: 'Modell auswählen',
+    ua: 'Оберіть модель дієти',
+    ru: 'Выберите модель диеты',
+    zh: '选择饮食模式',
+    hi: 'आहार मॉडल चुनें',
+    ar: 'اختر نموذج النظام الغذائي',
+    he: 'בחר מודל תזונה',
+    es: 'Seleccionar modelo de dieta',
+    fr: 'Choisir un modèle de régime',
+  },
+  
+  };

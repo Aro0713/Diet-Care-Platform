@@ -1,113 +1,86 @@
-import React from 'react'
+import { LangKey, getTranslation } from '../utils/i18n';
+import { section4 } from '../components/utils/translations/interview/section4';
 
-interface Props {
-  data: {
-    mealsPerDay: string
-    mealTimes: string
-    snacking: string
-    breakfast: string
-    sweets: string
-    water: string
-    processedFood: string
-    cookingHabits: string
-    foodFrequencies: string
-  }
-  onChange: (field: string, value: string) => void
+interface Section4FoodHabitsData {
+  mealsPerDay: string;
+  mealTimes: string;
+  waterIntake: string;
+  sugarCravings: string;
+  fastFoodFrequency: string;
+  excludedFoods: string;
 }
 
-export default function SectionFoodHabits({ data, onChange }: Props) {
+interface Props {
+  data: Section4FoodHabitsData;
+  onChange: (key: keyof Section4FoodHabitsData, value: string) => void;
+  lang: LangKey;
+}
+
+export default function SectionFoodHabits({ data, onChange, lang }: Props) {
+  const t = (key: keyof typeof section4) => getTranslation(section4, key, lang);
+
   return (
-    <div className='space-y-4 mt-6'>
-      <h3 className='text-lg font-bold'>Nawyki żywieniowe</h3>
+    <div className="space-y-4 mt-6">
+      <h3 className="text-lg font-bold">{t('section4_title')}</h3>
 
       <div>
-        <label className='block font-semibold'>Ile posiłków dziennie Pani/Pan spożywa?</label>
+        <label className="block font-semibold">{t('q4_1')}</label>
         <input
-          type='text'
-          className='w-full border px-2 py-1'
+          type="text"
+          className="w-full border px-2 py-1"
           value={data.mealsPerDay}
           onChange={(e) => onChange('mealsPerDay', e.target.value)}
         />
       </div>
 
       <div>
-        <label className='block font-semibold'>O jakich porach dnia najczęściej Pani/Pan je?</label>
+        <label className="block font-semibold">{t('q4_2')}</label>
         <input
-          type='text'
-          className='w-full border px-2 py-1'
+          type="text"
+          className="w-full border px-2 py-1"
           value={data.mealTimes}
           onChange={(e) => onChange('mealTimes', e.target.value)}
         />
       </div>
 
       <div>
-        <label className='block font-semibold'>Czy często podjada Pani/Pan między posiłkami?</label>
+        <label className="block font-semibold">{t('q4_6')}</label>
         <input
-          type='text'
-          className='w-full border px-2 py-1'
-          value={data.snacking}
-          onChange={(e) => onChange('snacking', e.target.value)}
+          type="text"
+          className="w-full border px-2 py-1"
+          value={data.waterIntake}
+          onChange={(e) => onChange('waterIntake', e.target.value)}
         />
       </div>
 
       <div>
-        <label className='block font-semibold'>Czy spożywa Pani/Pan regularnie śniadania?</label>
+        <label className="block font-semibold">{t('q4_3')}</label>
         <input
-          type='text'
-          className='w-full border px-2 py-1'
-          value={data.breakfast}
-          onChange={(e) => onChange('breakfast', e.target.value)}
+          type="text"
+          className="w-full border px-2 py-1"
+          value={data.sugarCravings}
+          onChange={(e) => onChange('sugarCravings', e.target.value)}
         />
       </div>
 
       <div>
-        <label className='block font-semibold'>Jak często sięga Pani/Pan po słodycze, fast-foody?</label>
+        <label className="block font-semibold">{t('q4_5')}</label>
         <input
-          type='text'
-          className='w-full border px-2 py-1'
-          value={data.sweets}
-          onChange={(e) => onChange('sweets', e.target.value)}
+          type="text"
+          className="w-full border px-2 py-1"
+          value={data.fastFoodFrequency}
+          onChange={(e) => onChange('fastFoodFrequency', e.target.value)}
         />
       </div>
 
       <div>
-        <label className='block font-semibold'>Ile wody Pani/Pan wypija dziennie? Jakie inne napoje?</label>
-        <input
-          type='text'
-          className='w-full border px-2 py-1'
-          value={data.water}
-          onChange={(e) => onChange('water', e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label className='block font-semibold'>Jak często spożywa Pani/Pan żywność przetworzoną?</label>
-        <input
-          type='text'
-          className='w-full border px-2 py-1'
-          value={data.processedFood}
-          onChange={(e) => onChange('processedFood', e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label className='block font-semibold'>Czy gotuje Pani/Pan w domu czy jada na mieście?</label>
-        <input
-          type='text'
-          className='w-full border px-2 py-1'
-          value={data.cookingHabits}
-          onChange={(e) => onChange('cookingHabits', e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label className='block font-semibold'>Jak często spożywane są: nabiał, mięso, ryby, warzywa, tłuszcze?</label>
+        <label className="block font-semibold">{t('q4_9')}</label>
         <textarea
-          className='w-full border px-2 py-1'
-          value={data.foodFrequencies}
-          onChange={(e) => onChange('foodFrequencies', e.target.value)}
+          className="w-full border px-2 py-1"
+          value={data.excludedFoods}
+          onChange={(e) => onChange('excludedFoods', e.target.value)}
         />
       </div>
     </div>
-  )
+  );
 }

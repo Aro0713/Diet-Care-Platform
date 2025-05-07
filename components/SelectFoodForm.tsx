@@ -1,43 +1,49 @@
-import React from "react";
+import React from 'react';
+import { LangKey, getTranslation } from '../utils/i18n';
+import { foodPreferencesLabels } from '../components/utils/translations/interview/foodPreferences';
 
 type Props = {
   selected: string[];
   onChange: (selected: string[]) => void;
+  lang: LangKey;
 };
 
-const foodPreferences = [
-  "wegetariańska",
-  "wegańska",
-  "bezglutenowa",
-  "bezlaktozowa",
-  "niskowęglowodanowa",
-  "wysokobiałkowa"
-];
+const foodPreferencesKeys = [
+  'vegetarian',
+  'vegan',
+  'glutenFree',
+  'lactoseFree',
+  'lowCarb',
+  'highProtein'
+] as const;
 
-export const SelectFoodForm: React.FC<Props> = ({ selected, onChange }) => {
-  const toggle = (food: string) => {
-    const updated = selected.includes(food)
-      ? selected.filter((f) => f !== food)
-      : [...selected, food];
+export const SelectFoodForm: React.FC<Props> = ({ selected, onChange, lang }) => {
+  const toggle = (key: string) => {
+    const updated = selected.includes(key)
+      ? selected.filter((f) => f !== key)
+      : [...selected, key];
     onChange(updated);
   };
+
+  const t = (key: keyof typeof foodPreferencesLabels) =>
+    getTranslation(foodPreferencesLabels, key, lang);
 
   return (
     <div className="mb-4">
       <label className="block text-sm font-medium text-gray-700 mb-1">
-        Preferencje żywieniowe
+        {t('title')}
       </label>
       <div className="flex flex-wrap gap-2">
-        {foodPreferences.map((food) => (
+        {foodPreferencesKeys.map((key) => (
           <button
-            key={food}
+            key={key}
             type="button"
-            onClick={() => toggle(food)}
+            onClick={() => toggle(key)}
             className={`px-3 py-1 rounded border ${
-              selected.includes(food) ? "bg-green-100 border-green-500" : "bg-white"
+              selected.includes(key) ? 'bg-green-100 border-green-500' : 'bg-white'
             }`}
           >
-            {food}
+            {t(key)}
           </button>
         ))}
       </div>
