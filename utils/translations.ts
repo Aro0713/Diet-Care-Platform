@@ -77,7 +77,7 @@ export const translationsUI: Record<string, Record<LangKey, string>> = {
     },
     sex: {
       pl: 'Płeć',
-      en: 'Gender',
+      en: 'sex',
       es: 'Género',
       fr: 'Sexe',
       de: 'Geschlecht',

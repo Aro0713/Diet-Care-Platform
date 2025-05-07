@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { isWithinNormalRange } from '../utils/isWithinNormalRange';
 import { translationsUI } from '../utils/translations';
 import { LangKey } from '../utils/i18n';
 
@@ -19,7 +18,17 @@ export default function LabTestInput({ test, lang, onChange }: Props) {
   const [value, setValue] = useState<string>('');
 
   const parsedValue = parseFloat(value.replace(',', '.'));
-  const result = isWithinNormalRange(parsedValue, test.normalRange);
+
+  // Wbudowana funkcja sprawdzająca zakres (bez zewnętrznego importu)
+  const isInRange = (val: number, range: string): boolean | null => {
+    const match = range.match(/^(\d+(?:[.,]\d+)?)\s*[\u2013\u2014\-]\s*(\d+(?:[.,]\d+)?)/);
+    if (!match) return null;
+    const min = parseFloat(match[1].replace(',', '.'));
+    const max = parseFloat(match[2].replace(',', '.'));
+    return val >= min && val <= max;
+  };
+
+  const result = isInRange(parsedValue, test.normalRange);
 
   const t = (key: keyof typeof translationsUI) =>
     translationsUI[key]?.[lang] ?? translationsUI[key]?.pl ?? key;
@@ -43,7 +52,8 @@ export default function LabTestInput({ test, lang, onChange }: Props) {
   return (
     <div className="mb-4 space-y-1">
       <label className="block font-semibold">
-        {test.name} <span className="text-sm text-gray-500">({test.unit})</span>
+        {test.name}{' '}
+        <span className="text-sm text-gray-500">({test.unit})</span>
       </label>
 
       <input

@@ -1,10 +1,10 @@
-ï»¿import React from 'react'
+import React from 'react'
 import { useState } from 'react'
 
 export default function PatientForm() {
   const [form, setForm] = useState({
     age: '',
-    gender: '',
+    sex: '',
     weight: '',
     height: '',
     conditions: [] as string[],
@@ -45,7 +45,7 @@ export default function PatientForm() {
       const data = await res.json()
       setDiet(data.diet)
     } catch (error) {
-      console.error('BÅ‚Ä…d podczas generowania diety:', error)
+      console.error('B³¹d podczas generowania diety:', error)
     } finally {
       setLoading(false)
     }
@@ -61,11 +61,11 @@ export default function PatientForm() {
           <input name='age' type='number' className='w-full border px-2 py-1' onChange={handleChange} required />
         </div>
         <div>
-          <label className='block mb-1'>PÅ‚eÄ‡</label>
-          <select name='gender' className='w-full border px-2 py-1' onChange={handleChange} required>
+          <label className='block mb-1'>P³eæ</label>
+          <select name='sex' className='w-full border px-2 py-1' onChange={handleChange} required>
             <option value=''>Wybierz</option>
             <option value='Kobieta'>Kobieta</option>
-            <option value='MÄ™Å¼czyzna'>MÄ™Å¼czyzna</option>
+            <option value='Mê¿czyzna'>Mê¿czyzna</option>
           </select>
         </div>
         <div>
@@ -81,7 +81,7 @@ export default function PatientForm() {
       <div>
         <label className='block mb-1'>Schorzenia</label>
         <div className='flex flex-wrap gap-4'>
-          {['niewydolnoÅ›Ä‡ nerek', 'niewydolnoÅ›Ä‡ wÄ…troby', 'cukrzyca', 'nadciÅ›nienie'].map((cond) => (
+          {['niewydolnoœæ nerek', 'niewydolnoœæ w¹troby', 'cukrzyca', 'nadciœnienie'].map((cond) => (
             <label key={cond}>
               <input
                 type='checkbox'
@@ -101,7 +101,7 @@ export default function PatientForm() {
       </div>
 
       <div>
-        <label className='block mb-1'>Region Å›wiata (np. Polska, Azja, USA)</label>
+        <label className='block mb-1'>Region œwiata (np. Polska, Azja, USA)</label>
         <input name='region' className='w-full border px-2 py-1' onChange={handleChange} />
       </div>
 
@@ -110,7 +110,7 @@ export default function PatientForm() {
         className='bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50'
         disabled={loading}
       >
-        {loading ? 'Generowanie...' : 'Wygeneruj dietÄ™'}
+        {loading ? 'Generowanie...' : 'Wygeneruj dietê'}
       </button>
 
       {diet && (

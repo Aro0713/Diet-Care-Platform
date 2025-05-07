@@ -16,7 +16,7 @@ pdfMake.vfs = pdfFonts.vfs; // ✅ Poprawnie
     { text: '📝 Wywiad dietetyczny', style: 'header' },
     { text: `Data: ${new Date().toLocaleString()}`, margin: [0, 0, 0, 10] },
     {
-      text: `Dane pacjenta:\nWiek: ${form.age} lat | Płeć: ${form.gender} | Waga: ${form.weight} kg | Wzrost: ${form.height} cm | BMI: ${bmi ?? 'n/a'}`,
+      text: `Dane pacjenta:\nWiek: ${form.age} lat | Płeć: ${form.sex} | Waga: ${form.weight} kg | Wzrost: ${form.height} cm | BMI: ${bmi ?? 'n/a'}`,
       margin: [0, 0, 0, 10],
     },
     {

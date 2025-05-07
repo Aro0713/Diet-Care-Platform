@@ -9,15 +9,15 @@ const openai = new OpenAI({
 const languageMap: Record<string, string> = {
   pl: 'polski',
   en: 'English',
-  es: 'español',
+  es: 'espanol',
   fr: 'français',
   de: 'Deutsch',
-  ua: 'українська',
-  ru: 'русский',
-  zh: '中文',
-  hi: 'हिन्दी',
-  ar: 'العربية',
-  he: 'עברית',
+  ua: '??????????',
+  ru: '???????',
+  zh: '??',
+  hi: '??????',
+  ar: '???????',
+  he: '?????',
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const {
     age,
-    gender,
+    sex,
     weight,
     height,
     allergies,
@@ -74,7 +74,7 @@ You are an expert clinical dietitian AI.
 
 Your task is to generate a complete, medically sound, 7-day diet plan for a real patient.
 
-⚠️ ALL patient data below is important and must be considered:
+?? ALL patient data below is important and must be considered:
 - Age, sex, weight, height, BMI
 - All medical conditions and test results
 - Lifestyle (sleep, stress, water, alcohol, fast-food, supplements)
@@ -82,7 +82,7 @@ Your task is to generate a complete, medically sound, 7-day diet plan for a real
 - Calculation results (PPM, CPM, protein/fat/carb needs) if provided
 - Any allergies or regional factors
 
-⚠️ Requirements:
+?? Requirements:
 - You MUST adapt calorie levels, nutrient composition, and dietary style to the patient's medical conditions, physiological needs, and dietary limitations.
 - The diet must support the healing process, prevent further complications, and avoid aggravating existing diseases.
 
@@ -106,7 +106,7 @@ Strict rules:
 - All content (meal names, products, units) must be written in: ${selectedLang}.
 - Return JSON only — no explanation, no markdown, no notes.
 
-🧬 Patient data:
+?? Patient data:
 ${JSON.stringify(patientData, null, 2)}
 `;
 
@@ -119,7 +119,7 @@ ${JSON.stringify(patientData, null, 2)}
     });
 
     const rawText = completion.choices[0]?.message?.content || '';
-    console.log('🧾 rawText:', rawText);
+    console.log('?? rawText:', rawText);
 
     if (
       !rawText ||
@@ -128,7 +128,7 @@ ${JSON.stringify(patientData, null, 2)}
       !rawText.includes('name') ||
       !rawText.includes('calories')
     ) {
-      console.warn('⚠️ Nieprawidłowa lub zbyt krótka odpowiedź z OpenAI.');
+      console.warn('?? Nieprawidłowa lub zbyt krótka odpowiedź z OpenAI.');
       return res.status(500).json({ error: 'Nieprawidłowa odpowiedź z AI – brak danych diety.' });
     }
 
@@ -136,9 +136,9 @@ ${JSON.stringify(patientData, null, 2)}
 
     try {
       parsed = JSON.parse(rawText);
-      console.log('✅ parsed diet:', parsed);
+      console.log('? parsed diet:', parsed);
     } catch (parseError) {
-      console.error('❌ Błąd parsowania JSON:', rawText);
+      console.error('? Błąd parsowania JSON:', rawText);
       return res.status(500).json({ error: 'Nie udało się sparsować diety z AI.' });
     }
 
@@ -162,7 +162,7 @@ ${JSON.stringify(patientData, null, 2)}
     const completed = ensureCompleteWeek(parsed);
     return res.status(200).json({ diet: completed });
   } catch (err: any) {
-    console.error('❌ Błąd OpenAI:', err.message || err);
+    console.error('? Błąd OpenAI:', err.message || err);
     return res.status(500).json({ error: 'Błąd generowania diety.' });
   }
 }

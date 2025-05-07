@@ -195,7 +195,7 @@ function Panel() {
       setDiet(normalizedDiet)
       setEditableDiet(normalizedDiet)
     } catch (err: any) {
-      console.error('❌ Błąd generowania diety:', err.message || err)
+      console.error('? Błąd generowania diety:', err.message || err)
       alert('Wystąpił błąd podczas generowania diety. Spróbuj ponownie.')
     } finally {
       setIsGenerating(false)
@@ -203,7 +203,7 @@ function Panel() {
   }
 
   const handleSendToPatient = () => {
-    alert('📤 Dieta została wysłana pacjentowi (symulacja).')
+    alert('?? Dieta została wysłana pacjentowi (symulacja).')
   }
 
   return (
@@ -236,15 +236,15 @@ function Panel() {
         >
           <option value="pl">Polski</option>
           <option value="en">English</option>
-          <option value="ua">Українська</option>
-          <option value="es">Español</option>
+          <option value="ua">??????????</option>
+          <option value="es">Espanol</option>
           <option value="fr">Français</option>
           <option value="de">Deutsch</option>
-          <option value="ru">Русский</option>
-          <option value="zh">中文</option>
-          <option value="hi">हिन्दी</option>
-          <option value="ar">العربية</option>
-          <option value="he">עברית</option>
+          <option value="ru">???????</option>
+          <option value="zh">??</option>
+          <option value="hi">??????</option>
+          <option value="ar">???????</option>
+          <option value="he">?????</option>
         </select>
       </div>
   
@@ -280,7 +280,7 @@ function Panel() {
   </div>
 
   <div>
-    <label className="block mb-1">🌍 Region</label>
+    <label className="block mb-1">?? Region</label>
     <select
       name="region"
       className="w-full border px-2 py-1"
@@ -352,7 +352,7 @@ function Panel() {
           className="flex-1 bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
           disabled={isGenerating}
         >
-          {isGenerating ? '✍️ Piszę dietę...' : t('generate')}
+          {isGenerating ? '?? Piszę dietę...' : t('generate')}
         </button>
   
         <button
@@ -361,7 +361,7 @@ function Panel() {
           onClick={() => setDietApproved(true)}
           disabled={!confirmedDiet}
         >
-          ✅ Zatwierdź dietę
+          ? Zatwierdź dietę
         </button>
   
         <button
@@ -370,7 +370,7 @@ function Panel() {
           onClick={() => generateDietPdf(form, bmi, confirmedDiet || [], dietApproved)}
           disabled={!confirmedDiet}
         >
-          📄 {t('pdf')}
+          ?? {t('pdf')}
         </button>
   
         <button
@@ -378,7 +378,7 @@ function Panel() {
           className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           onClick={handleSendToPatient}
         >
-          📤 {t('sendToPatient')}
+          ?? {t('sendToPatient')}
         </button>
       </div>
   

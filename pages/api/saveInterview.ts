@@ -12,7 +12,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   // Uproszczona walidacja kluczowych danych
-  const requiredFields = ['age', 'gender', 'weight', 'height'];
+  const requiredFields = ['age', 'sex', 'weight', 'height'];
   const missingFields = requiredFields.filter((field) => !form[field]);
 
   if (missingFields.length > 0) {
@@ -29,7 +29,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     language: lang || 'pl',
     patient: {
       age: form.age,
-      gender: form.gender,
+      sex: form.sex,
       weight: form.weight,
       height: form.height,
       allergies: form.allergies || '',

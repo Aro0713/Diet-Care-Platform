@@ -55,9 +55,9 @@ export const translations: Record<string, Record<string, string>> = {
       es: 'Edad',
       fr: 'Âge',
     },
-    gender: {
+    sex: {
       pl: 'Płeć',
-      en: 'Gender',
+      en: 'sex',
       de: 'Geschlecht',
       ua: 'Стать',
       ru: 'Пол',
@@ -249,19 +249,6 @@ export const translations: Record<string, Record<string, string>> = {
       he: 'בחר מודל תזונה',
       es: 'Seleccionar modelo de dieta',
       fr: 'Choisir un modèle de régime',
-    },
-    sex: {
-      pl: 'Płeć',
-      en: 'Sex',
-      de: 'Geschlecht',
-      ua: 'Стать',
-      ru: 'Пол',
-      zh: '性别',
-      hi: 'लिंग',
-      ar: 'الجنس',
-      he: 'מין',
-      es: 'Género',
-      fr: 'Sexe',
     },
     selectDiseaseGroups: {
       pl: 'Wybierz grupy chorób',

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface Props {
   patient: {
     age: number;
-    gender: string;
+    sex: string;
     weight: number;
     height: number;
     allergies?: string;

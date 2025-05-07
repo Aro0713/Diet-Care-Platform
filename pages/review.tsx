@@ -53,7 +53,7 @@ export default function ReviewPage() {
         pendingDiets.map((entry) => (
           <div key={entry.id} className='bg-white p-4 rounded shadow mb-4'>
             <p className='text-sm text-gray-500'>📅 {entry.date}</p>
-            <p><strong>Pacjent:</strong> {entry.patient.age} lat, {entry.patient.gender}</p>
+            <p><strong>Pacjent:</strong> {entry.patient.age} lat, {entry.patient.sex}</p>
             <p><strong>Waga:</strong> {entry.patient.weight} kg | <strong>Wzrost:</strong> {entry.patient.height} cm | <strong>BMI:</strong> {entry.bmi}</p>
             
             <ul className='list-disc pl-5 text-sm mt-2'>

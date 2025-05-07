@@ -16,7 +16,7 @@ export async function generateDietPdf(
     { text: '📋 Plan żywieniowy pacjenta', style: 'header' },
     { text: `Data: ${new Date().toLocaleString()}`, margin: [0, 0, 0, 10] },
     {
-      text: `Dane pacjenta:\nWiek: ${patient.age} lat | Płeć: ${patient.gender} | Waga: ${patient.weight} kg | Wzrost: ${patient.height} cm | BMI: ${bmi ?? 'n/a'}`,
+      text: `Dane pacjenta:\nWiek: ${patient.age} lat | Płeć: ${patient.sex} | Waga: ${patient.weight} kg | Wzrost: ${patient.height} cm | BMI: ${bmi ?? 'n/a'}`,
       margin: [0, 0, 0, 10]
     },
     {
@@ -28,14 +28,14 @@ export async function generateDietPdf(
       style: 'subheader',
       margin: [0, 10, 0, 4]
     },
-    ...((patient.medical ?? []) as MedicalData[]).flatMap((entry: MedicalData) => [
+    ...(patient.medical ?? []).flatMap((entry) => [
       { text: `• ${entry.condition}`, bold: true, margin: [0, 4, 0, 0] },
-      ...entry.tests.map((test: TestResult) => ({
+      ...entry.tests.map((test) => ({
         text: `   → ${test.name}: ${test.value || '—'}`,
-        margin: [10, 0, 0, 0],
-        fontSize: 10
+        margin: [0, 0, 0, 2]
       }))
     ]),
+    
     {
       text: '🍴 Zalecana dieta:',
       style: 'subheader',

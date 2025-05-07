@@ -16,18 +16,31 @@ export type TestResult = {
   value: string;
 };
 
-export type MedicalData = {
+export interface MedicalData {
+  name: string;       // np. "glukoza"
+  value: string;      // np. "98"
+  unit?: string;      // np. "mg/dl"
+  note?: string;      // np. "po posiłku", "na czczo"
+}
+
+export type ConditionWithTests = {
   condition: string;
   tests: TestResult[];
 };
 
-export interface PatientData {
+export type PatientData = {
+  name: string;
   age: number;
-  gender: string;
+  sex: 'female' | 'male';        // ✅ dodane pole wymagane w InterviewForm
   weight: number;
   height: number;
   allergies?: string;
   region?: string;
+  goal?: string;
+  cuisine?: string;
+  model?: string;
+  phone?: string;
+  email?: string;
   conditions: string[];
-  medical: MedicalData[];
-}
+  medical: ConditionWithTests[];
+};

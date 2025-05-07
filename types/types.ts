@@ -16,7 +16,7 @@ export interface Meal {
 
 export interface PatientData {
   age: string;
-  gender: string;
+  sex: string;
   weight: string;
   height: string;
   allergies: string;
