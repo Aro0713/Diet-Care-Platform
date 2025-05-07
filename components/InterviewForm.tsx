@@ -93,7 +93,7 @@ export interface InterviewData {
   section9: Section9WomenOnlyData | undefined;
 }
 
-export default function InterviewForm({ onChange, form, bmi, editableDiet, lang }: Props) {
+export const InterviewForm = ({ onChange, form, bmi, editableDiet, lang }: Props) => {
   const [data, setData] = useState<InterviewData>({
     section1: { '1.1': '', '1.2': '', '1.3': '', '1.4': '' },
     section2: { '2.1': '', '2.2': '', '2.3': '', '2.4': '' },
@@ -142,7 +142,7 @@ export default function InterviewForm({ onChange, form, bmi, editableDiet, lang 
       supportSystem: '',
       expectations: ''
     },
-    section9: form.sex === 'female'
+    section9: form?.sex === 'female'
       ? {
           menstrualCycle: '',
           hormonalIssues: '',
@@ -154,7 +154,7 @@ export default function InterviewForm({ onChange, form, bmi, editableDiet, lang 
   });
 
   useEffect(() => {
-    if (form.sex === 'female' && !data.section9) {
+    if (form?.sex === 'female' && !data.section9) {
       setData(prev => ({
         ...prev,
         section9: {
@@ -166,7 +166,7 @@ export default function InterviewForm({ onChange, form, bmi, editableDiet, lang 
         }
       }));
     }
-  }, [form.sex, data.section9]);
+  }, [form?.sex, data.section9]);
 
   const handleFieldChange = <K extends keyof InterviewData>(
     section: K,
@@ -182,7 +182,6 @@ export default function InterviewForm({ onChange, form, bmi, editableDiet, lang 
     }));
   };
 
-  // Osobna funkcja tylko dla section9 (kobiety)
   const handleSection9Change = (
     key: keyof Section9WomenOnlyData,
     value: string
@@ -261,7 +260,7 @@ export default function InterviewForm({ onChange, form, bmi, editableDiet, lang 
         onChange={(key, value) => handleFieldChange('section8', key, value)}
         lang={lang}
       />
-      {form.sex === 'female' && data.section9 && (
+      {form?.sex === 'female' && data.section9 && (
         <SectionWomenOnly
           data={data.section9}
           onChange={handleSection9Change}
@@ -288,4 +287,4 @@ export default function InterviewForm({ onChange, form, bmi, editableDiet, lang 
       </div>
     </div>
   );
-}
+};
