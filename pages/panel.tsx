@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import DietEditor from '../components/DietEditor'
 import MedicalForm from '../components/MedicalForm'
-import InterviewForm from '../components/InterviewForm'
+import { InterviewForm } from '../components/InterviewForm';
 import SelectCuisineForm from '../components/SelectCuisineForm'
 import DietGoalForm from '../components/DietGoalForm'
 import SelectModelForm from '../components/SelectModelForm'
