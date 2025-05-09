@@ -1,10 +1,7 @@
 ﻿// /pages/api/generate-diet.ts
 
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { OpenAI } from 'openai';
-
-export const config = {
-  runtime: 'nodejs',
-};
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -24,15 +21,18 @@ const languageMap: Record<string, string> = {
   he: 'עברית',
 };
 
-export default async function handler(req: Request): Promise<Response> {
+export const config = {
+  api: {
+    bodyParser: true,
+  },
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Only POST requests are allowed' }), {
-      status: 405,
-    });
+    return res.status(405).json({ error: 'Only POST requests are allowed' });
   }
 
-  const { form, interviewData, lang = 'pl' } = await req.json();
-
+  const { form, interviewData, lang = 'pl' } = req.body;
   const selectedLang = languageMap[lang] || 'polski';
 
   const bmi =
@@ -49,72 +49,64 @@ export default async function handler(req: Request): Promise<Response> {
   };
 
   const prompt = `
-You are an expert clinical dietitian AI.
+You are an expert clinical dietitian AI with advanced knowledge in:
+- human metabolism, endocrine and GI systems,
+- chronic and diet-related diseases,
+- drug-nutrient and supplement interactions,
+- culturally sensitive nutrition and therapeutic food design.
 
-Your task is to generate a complete, medically sound, 7-day diet plan for a real patient.
+Your task is to generate a complete, 7-day, medically sound and evidence-based diet plan for a real patient. All information provided must be analyzed carefully and individually.
 
-ALL patient data below is important and must be considered:
-- Age, sex, weight, height, BMI
-- All medical conditions and test results
-- Lifestyle (sleep, stress, water, alcohol, fast-food, supplements)
-- Preferred cuisine, diet model, goals
-- Calculation results (PPM, CPM, protein/fat/carb needs) if provided
-- Any allergies or regional factors
-- Number of meals per day: defined by physician/dietitian (${interviewData.mealsPerDay})
-
-Requirements:
-- You MUST adapt calorie levels, nutrient composition, and dietary style to the patient's medical conditions, physiological needs, and dietary limitations.
-- The diet must support the healing process, prevent further complications, and avoid aggravating existing diseases.
-
-Return only valid JSON in this exact format:
-
-{
-  "Monday": [
-    {
-      "name": "translated meal name",
-      "ingredients": [{ "product": "translated product", "weight": 120 }],
-      "calories": 400,
-      "glycemicIndex": 45
-    }
-  ],
-  ...
-}
+Your diet must:
+- match the patient's age, sex, BMI, medical conditions and test results,
+- support therapeutic goals (e.g. insulin resistance, lipid profile, inflammation),
+- adjust for lifestyle (work, stress, sleep, activity, appetite),
+- avoid allergens, intolerances and patient-excluded products,
+- include correct kcal, macronutrient balance and glycemic index (if needed),
+- contain realistic, home-preparable meals — culturally appropriate and seasonally adjusted.
 
 Strict rules:
-- Always return exactly 7 days: from "Monday" to "Sunday" (do NOT translate day keys).
-- Each day must contain exactly ${interviewData.mealsPerDay} meals.
-- All content (meal names, products, units) must be written in: ${selectedLang}.
-- Return JSON only — no explanation, no markdown, no notes.
+- Return JSON only — no explanation, notes or markdown.
+- Always generate exactly 7 days (Monday to Sunday).
+- Each day must contain exactly ${interviewData.mealsPerDay} meals (as prescribed by the physician).
+- Vary ingredients — do not repeat meals or products more than once every 2 days.
+- Use UTF-8 and write everything in: ${selectedLang}.
+
+Sources:
+- Follow ESPEN, EASO, ADA, DRI, USDA, EFSA, IŻŻ, PubMed and Cochrane-reviewed clinical evidence.
+
 
 Patient data:
 ${JSON.stringify(patientData, null, 2)}
 `;
 
-  const stream = await openai.chat.completions.create({
-    model: 'gpt-4-turbo',
-    stream: true,
-    temperature: 0.7,
-    max_tokens: 3000,
-    messages: [{ role: 'user', content: prompt }],
-  });
+  try {
+    const stream = await openai.chat.completions.create({
+      model: 'gpt-4-turbo',
+      stream: true,
+      temperature: 0.7,
+      max_tokens: 3000,
+      messages: [{ role: 'user', content: prompt }],
+    });
 
-  const encoder = new TextEncoder();
-  const readable = new ReadableStream({
-    async start(controller) {
-      for await (const chunk of stream) {
-        const text = chunk.choices?.[0]?.delta?.content;
-        if (text) {
-          controller.enqueue(encoder.encode(text));
-        }
-      }
-      controller.close();
-    },
-  });
-
-  return new Response(readable, {
-    headers: {
+    res.writeHead(200, {
       'Content-Type': 'text/plain; charset=utf-8',
       'Cache-Control': 'no-cache',
-    },
-  });
+      'Transfer-Encoding': 'chunked',
+    });
+
+    const encoder = new TextEncoder();
+
+    for await (const chunk of stream) {
+      const text = chunk.choices?.[0]?.delta?.content;
+      if (text) {
+        res.write(encoder.encode(text));
+      }
+    }
+
+    res.end();
+  } catch (error: any) {
+    console.error('❌ OpenAI error:', error);
+    res.status(500).json({ error: 'Błąd generowania diety przez AI.' });
+  }
 }
