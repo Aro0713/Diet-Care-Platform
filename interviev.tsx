@@ -12,9 +12,14 @@ export default function Interview() {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!formData.mealsPerDayDecision) {
+    alert('⚠️ Lekarz musi określić liczbę posiłków w planie diety.');
+    return;
+  }
+  try {
       const response = await fetch("/api/saveInterview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -132,6 +137,22 @@ export default function Interview() {
 <TextArea label="Jakie leki aktualnie przyjmuje Pani/Pan?" name="currentMedications" handleChange={handleChange} />
 <TextArea label="Jaką suplementację stosuje Pani/Pan?" name="currentSupplements" handleChange={handleChange} />
 
+<h2 className="text-xl font-semibold mt-10 mb-4">Liczba posiłków w planie (ustala lekarz)</h2>
+<div>
+  <label className="block mb-2 font-medium">Ile posiłków powinien zawierać plan diety?</label>
+  <select
+    name="mealsPerDayDecision"
+    onChange={(e) => setFormData({ ...formData, mealsPerDayDecision: Number(e.target.value) })}
+    required
+    className="w-full p-2 border rounded mb-4"
+    value={formData.mealsPerDayDecision || ''}
+  >
+    <option value="" disabled>Wybierz...</option>
+    <option value="3">3 posiłki</option>
+    <option value="4">4 posiłki</option>
+    <option value="5">5 posiłków</option>
+  </select>
+</div>
 
         {/* Przycisk zapisujący */}
         <button

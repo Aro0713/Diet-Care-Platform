@@ -12,6 +12,7 @@ import SectionWeightHistory from './SectionWeightHistory';
 import SectionDigestion from './SectionDigestion';
 import SectionMotivation from './SectionMotivation';
 import SectionWomenOnly from './SectionWomenOnly';
+import { MealPlanConfig } from './MealPlanConfig'; // dodaj u góry pliku
 
 interface Props {
   onChange: (data: InterviewData) => void;
@@ -91,7 +92,10 @@ export interface InterviewData {
   section7: Section7DigestionData;
   section8: Section8MotivationData;
   section9: Section9WomenOnlyData | undefined;
+  mealsPerDay: number;
+  mealPlan: { name: string; time: string }[];
 }
+
 
 export const InterviewForm = ({ onChange, form, bmi, editableDiet, lang }: Props) => {
   const [data, setData] = useState<InterviewData>({
@@ -150,8 +154,14 @@ export const InterviewForm = ({ onChange, form, bmi, editableDiet, lang }: Props
           breastfeeding: '',
           contraception: ''
         }
-      : undefined
-  });
+         : undefined,
+  mealsPerDay: 3,
+  mealPlan: [
+    { name: 'Śniadanie', time: '' },
+    { name: 'Obiad', time: '' },
+    { name: 'Kolacja', time: '' }
+  ]
+});
 
   useEffect(() => {
     if (form?.sex === 'female' && !data.section9) {
@@ -169,18 +179,24 @@ export const InterviewForm = ({ onChange, form, bmi, editableDiet, lang }: Props
   }, [form?.sex, data.section9]);
 
   const handleFieldChange = <K extends keyof InterviewData>(
-    section: K,
-    key: keyof InterviewData[K],
-    value: string
-  ) => {
+  section: K,
+  key: keyof InterviewData[K],
+  value: string
+) => {
+  const currentSection = data[section];
+  if (typeof currentSection === 'object' && currentSection !== null && !Array.isArray(currentSection)) {
     setData(prev => ({
       ...prev,
       [section]: {
-        ...prev[section],
+        ...currentSection,
         [key]: value
       } as InterviewData[K]
     }));
-  };
+  } else {
+    console.warn(`✋ Nie można zaktualizować sekcji "${String(section)}", bo nie jest to obiekt.`);
+  }
+};
+
 
   const handleSection9Change = (
     key: keyof Section9WomenOnlyData,
@@ -268,23 +284,33 @@ export const InterviewForm = ({ onChange, form, bmi, editableDiet, lang }: Props
         />
       )}
 
-      <div className="flex gap-4 pt-4">
-        <button
-          onClick={() =>
-            generateInterviewPdf(form, bmi, Object.values(editableDiet).flat())
-          }
-          className="bg-green-700 text-white px-4 py-2 rounded"
-        >
-          📄 {t('pdf')}
-        </button>
+<MealPlanConfig
+  onConfigured={({ mealsPerDay, meals }) => {
+    setData((prev) => ({
+      ...prev,
+      mealsPerDay,
+      mealPlan: meals
+    }));
+  }}
+/>
 
-        <button
-          onClick={handleSendToPatient}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          ✉️ {t('sendToPatient')}
-        </button>
-      </div>
+<div className="flex gap-4 pt-4">
+  <button
+    onClick={() =>
+      generateInterviewPdf(form, bmi, Object.values(editableDiet).flat())
+    }
+    className="bg-green-700 text-white px-4 py-2 rounded"
+  >
+    📄 {t('pdf')}
+  </button>
+
+  <button
+    onClick={handleSendToPatient}
+    className="bg-blue-600 text-white px-4 py-2 rounded"
+  >
+    ✉️ {t('sendToPatient')}
+ </button>
     </div>
-  );
+  </div>
+);
 };
