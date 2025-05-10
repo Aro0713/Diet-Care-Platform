@@ -17,8 +17,11 @@ import ConfirmationModal from '@/components/ConfirmationModal'
 import DietTable from '@/components/DietTable'
 import { MedicalData } from '../types'
 import { ConditionWithTests } from '../types'
-import { LangKey } from '../utils/i18n'; // lub z odpowiedniego miejsca
 import CalculationBlock from '../components/CalculationBlock';
+import { languageLabels } from '../utils/i18n';
+import { tUI } from '../utils/i18n';
+import type { LangKey } from '../utils/i18n';
+
 
 function Panel() {
   const [lang, setLang] = useState<LangKey>('pl');
@@ -206,134 +209,137 @@ function Panel() {
     alert('?? Dieta została wysłana pacjentowi (symulacja).')
   }
 
-  return (
-    <div className="min-h-screen bg-[url('/background.jpg')] bg-cover bg-center bg-no-repeat backdrop-blur-sm">
-      <Head>
-        <title>Diet Care Platform – Panel Lekarza</title>
-      </Head>
-  
-      <ConfirmationModal
-        open={showConfirmModal}
-        onCancel={() => setShowConfirmModal(false)}
-        missingFields={missingFields}
-        onConfirm={() => {
-          setShowConfirmModal(false);
-          submitPending?.();
+ return (
+  <div className="min-h-screen bg-[url('/background.jpg')] bg-cover bg-center bg-no-repeat backdrop-blur-sm">
+    <Head>
+      <title>Diet Care Platform – Panel Lekarza</title>
+    </Head>
+
+    <ConfirmationModal
+      open={showConfirmModal}
+      onCancel={() => setShowConfirmModal(false)}
+      missingFields={missingFields}
+      onConfirm={() => {
+        setShowConfirmModal(false);
+        submitPending?.();
+      }}
+    />
+
+    {/* Język interfejsu */}
+    <div className="mb-6 p-4">
+      <label className="block font-semibold mb-1">{tUI('selectLanguage', lang)}:</label>
+
+      <select
+        className="border px-2 py-1 rounded w-full max-w-xs"
+        value={lang}
+        onChange={(e) => {
+          const selected = e.target.value as LangKey;
+          setLang(selected);
+          localStorage.setItem('platformLang', selected);
         }}
-      />
-  
-      {/* Język interfejsu */}
-      <div className="mb-6 p-4">
-        <label className="block font-semibold mb-1">{t('selectLanguage')}:</label>
-        <select
-          className="border px-2 py-1 rounded w-full max-w-xs"
-          value={lang}
-          onChange={(e) => {
-            const selected = e.target.value as LangKey;
-            setLang(selected);
-            localStorage.setItem('platformLang', selected);
-          }}
-        >
-          <option value="pl">Polski</option>
-          <option value="en">English</option>
-          <option value="ua">??????????</option>
-          <option value="es">Espanol</option>
-          <option value="fr">Français</option>
-          <option value="de">Deutsch</option>
-          <option value="ru">???????</option>
-          <option value="zh">??</option>
-          <option value="hi">??????</option>
-          <option value="ar">???????</option>
-          <option value="he">?????</option>
-        </select>
-      </div>
-  
-     {/* Główna sekcja – dwie kolumny */}
-<div className="flex flex-col md:flex-row w-full max-w-[1400px] mx-auto gap-6 px-4">
-
-{/* Kolumna 1 – dane pacjenta */}
-<form onSubmit={handleSubmit} className="w-full md:w-1/2 space-y-4">
-  <h1 className="text-3xl font-bold">{t('title')}</h1>
-  <p className="text-sm text-gray-600">{t('subtitle')}</p>
-
-  <div className="grid grid-cols-2 gap-4">
-    <div>
-      <label className="block mb-1">{t('age')}</label>
-      <input name="age" type="number" className="w-full border px-2 py-1" onChange={handleChange} required />
-    </div>
-    <div>
-      <label className="block mb-1">{t('sex')}</label>
-      <select name="sex" className="w-full border px-2 py-1" onChange={handleChange} required>
-        <option value="">{t('sex')}</option>
-        <option value="Kobieta">{t('female')}</option>
-        <option value="Mężczyzna">{t('male')}</option>
+      >
+        <option value="pl">Polski</option>
+        <option value="en">English</option>
+        <option value="ua">Українська</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="ru">Русский</option>
+        <option value="zh">中文</option>
+        <option value="hi">हिन्दी</option>
+        <option value="ar">العربية</option>
+        <option value="he">עברית</option>
       </select>
     </div>
-    <div>
-      <label className="block mb-1">{t('weight')}</label>
-      <input name="weight" type="number" className="w-full border px-2 py-1" onChange={handleChange} required />
+
+    {/* Główna sekcja – dwie kolumny */}
+    <div className="flex flex-col md:flex-row w-full max-w-[1400px] mx-auto gap-6 px-4">
+      {/* Kolumna 1 – dane pacjenta */}
+      <form onSubmit={handleSubmit} className="w-full md:w-1/2 space-y-4">
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <p className="text-sm text-gray-600">{t('subtitle')}</p>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-1">{t('age')}</label>
+            <input name="age" type="number" className="w-full border px-2 py-1" onChange={handleChange} required />
+          </div>
+          <div>
+            <label className="block mb-1">{t('sex')}</label>
+            <select name="sex" className="w-full border px-2 py-1" onChange={handleChange} required>
+              <option value="">{t('sex')}</option>
+              <option value="Kobieta">{t('female')}</option>
+              <option value="Mężczyzna">{t('male')}</option>
+            </select>
+          </div>
+          <div>
+            <label className="block mb-1">{t('weight')}</label>
+            <input name="weight" type="number" className="w-full border px-2 py-1" onChange={handleChange} required />
+          </div>
+          <div>
+            <label className="block mb-1">{t('height')}</label>
+            <input name="height" type="number" className="w-full border px-2 py-1" onChange={handleChange} required />
+          </div>
+        </div>
+
+        <div>
+          <label className="block mb-1">{tUI('region', lang)}</label>
+          <select
+            name="region"
+            className="w-full border px-2 py-1"
+            value={form.region}
+            onChange={handleChange}
+            required
+          >
+            <option value="">{`-- ${tUI('selectRegion', lang)} --`}</option>
+            <option value="Europa Środkowa">Europa Środkowa</option>
+            <option value="Europa Północna">Europa Północna</option>
+            <option value="Europa Południowa">Europa Południowa</option>
+            <option value="Azja Wschodnia">Azja Wschodnia</option>
+            <option value="Azja Południowa">Azja Południowa</option>
+            <option value="Ameryka Północna">Ameryka Północna</option>
+            <option value="Ameryka Południowa">Ameryka Południowa</option>
+            <option value="Afryka Subsaharyjska">Afryka Subsaharyjska</option>
+            <option value="Bliski Wschód">Bliski Wschód</option>
+            <option value="Regiony polarne">Regiony polarne</option>
+          </select>
+        </div>
+
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold">{tUI('medicalData', lang)}</h2>
+          <MedicalForm onChange={handleMedicalChange} />
+        </div>
+
+        <div className="mt-6">
+          <DietGoalForm
+            onChange={(goal) => setInterviewData({ ...interviewData, goal })}
+            lang={lang}
+          />
+        </div>
+
+        <div className="mt-4">
+          <SelectModelForm onChange={(model) => setInterviewData({ ...interviewData, model })} lang={lang} />
+        </div>
+
+        <div className="mt-4">
+          <SelectCuisineForm onChange={(cuisine) => setInterviewData({ ...interviewData, cuisine })} lang={lang} />
+        </div>
+      </form>
+
+      {/* Kolumna 2 – wywiad */}
+      <div className="w-full md:w-1/2 max-h-[90vh] overflow-y-auto space-y-6 pr-2">
+        <InterviewForm
+          onChange={(data) => setInterviewData({ ...interviewData, ...data })}
+          form={form}
+          bmi={bmi}
+          editableDiet={editableDiet}
+          lang={lang}
+        />
+      </div>
     </div>
-    <div>
-      <label className="block mb-1">{t('height')}</label>
-      <input name="height" type="number" className="w-full border px-2 py-1" onChange={handleChange} required />
-    </div>
-  </div>
 
-  <div>
-    <label className="block mb-1">?? Region</label>
-    <select
-      name="region"
-      className="w-full border px-2 py-1"
-      value={form.region}
-      onChange={handleChange}
-      required
-    >
-      <option value="">-- wybierz region --</option>
-      <option value="Europa Środkowa">Europa Środkowa</option>
-      <option value="Europa Północna">Europa Północna</option>
-      <option value="Europa Południowa">Europa Południowa</option>
-      <option value="Azja Wschodnia">Azja Wschodnia</option>
-      <option value="Azja Południowa">Azja Południowa</option>
-      <option value="Ameryka Północna">Ameryka Północna</option>
-      <option value="Ameryka Południowa">Ameryka Południowa</option>
-      <option value="Afryka Subsaharyjska">Afryka Subsaharyjska</option>
-      <option value="Bliski Wschód">Bliski Wschód</option>
-      <option value="Regiony polarne">Regiony polarne</option>
-    </select>
-  </div>
-
-  <div className="mt-6">
-    <h2 className="text-lg font-semibold">{t('medicalData')}</h2>
-    <MedicalForm onChange={handleMedicalChange} />
-  </div>
-
-  <div className="mt-6">
-    <DietGoalForm onChange={(goal) => setInterviewData({ ...interviewData, goal })} lang={lang} />
-  </div>
-
-  <div className="mt-4">
-    <SelectModelForm onChange={(model) => setInterviewData({ ...interviewData, model })} lang={lang} />
-  </div>
-
-  <div className="mt-4">
-    <SelectCuisineForm onChange={(cuisine) => setInterviewData({ ...interviewData, cuisine })} lang={lang} />
-  </div>
-</form>
-
-{/* Kolumna 2 – wywiad */}
-<div className="w-full md:w-1/2 max-h-[90vh] overflow-y-auto space-y-6 pr-2">
-  <InterviewForm
-    onChange={(data) => setInterviewData({ ...interviewData, ...data })}
-    form={form}
-    bmi={bmi}
-    editableDiet={editableDiet}
-    lang={lang}
-  />
-</div>
-</div>
-
-{/* Sekcja kalkulatorów – pełna szerokość */}
-<div className="w-full px-4 mt-6">
+    {/* Sekcja kalkulatorów – pełna szerokość */}
+    <div className="w-full px-4 mt-6">
   <CalculationBlock
     weight={form.weight}
     height={form.height}
@@ -342,59 +348,61 @@ function Panel() {
     lang={lang}
     onResult={(data) => setInterviewData({ ...interviewData, ...data })}
   />
-</div>
+</div> 
 
 
-      <div className="w-full flex flex-wrap justify-between gap-4 px-8 mt-6">
-        <button
-          type="button"
-          onClick={handleSubmit}
-          className="flex-1 bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-          disabled={isGenerating}
-        >
-          {isGenerating ? '?? Piszę dietę...' : t('generate')}
-        </button>
-  
-        <button
-          type="button"
-          className="flex-1 bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800"
-          onClick={() => setDietApproved(true)}
-          disabled={!confirmedDiet}
-        >
-          ? Zatwierdź dietę
-        </button>
-  
-        <button
-          type="button"
-          className="flex-1 bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
-          onClick={() => generateDietPdf(form, bmi, confirmedDiet || [], dietApproved)}
-          disabled={!confirmedDiet}
-        >
-          ?? {t('pdf')}
-        </button>
-  
-        <button
-          type="button"
-          className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          onClick={handleSendToPatient}
-        >
-          ?? {t('sendToPatient')}
-        </button>
-      </div>
-  
-      {diet && (
-        <div className="w-full px-8 mt-10">
-          <DietTable
-            editableDiet={editableDiet}
-            setEditableDiet={setEditableDiet}
-            setConfirmedDiet={(diet) => {
-              handleDietSave(Object.values(diet).flat());
-            }}
-            isEditable={!dietApproved}
-          />
-        </div>
-      )}
+    {/* Przyciski */}
+    <div className="w-full flex flex-wrap justify-between gap-4 px-8 mt-6">
+      <button
+        type="button"
+        onClick={handleSubmit}
+        className="flex-1 bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        disabled={isGenerating}
+      >
+        {isGenerating ? '✍️ Piszę dietę...' : tUI('generate', lang)}
+      </button>
+
+      <button
+        type="button"
+        className="flex-1 bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800"
+        onClick={() => setDietApproved(true)}
+        disabled={!confirmedDiet}
+      >
+        ✅ {tUI('approvedDiet', lang)}
+      </button>
+
+      <button
+        type="button"
+        className="flex-1 bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
+        onClick={() => generateDietPdf(form, bmi, confirmedDiet || [], dietApproved)}
+        disabled={!confirmedDiet}
+      >
+        🧾 {tUI('pdf', lang)}
+      </button>
+
+      <button
+        type="button"
+        className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        onClick={handleSendToPatient}
+      >
+        📤 {tUI('sendToPatient', lang)}
+      </button>
     </div>
-  );
+
+    {/* Tabela diety */}
+    {diet && (
+      <div className="w-full px-8 mt-10">
+        <DietTable
+          editableDiet={editableDiet}
+          setEditableDiet={setEditableDiet}
+          setConfirmedDiet={(diet) => {
+            handleDietSave(Object.values(diet).flat());
+          }}
+          isEditable={!dietApproved}
+        />
+      </div>
+    )}
+</div> 
+);
 }
 export default Panel;

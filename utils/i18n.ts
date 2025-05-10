@@ -315,5 +315,22 @@ export const translations: Record<string, Record<string, string>> = {
 >(source: T, key: K, lang: LangKey): string {
   return source[key]?.[lang] || source[key]?.['pl'] || (key as string);
 }
-
+export const languageLabels: Record<LangKey, string> = {
+  pl: 'Polski',
+  en: 'English',
+  es: 'Español',
+  fr: 'Français',
+  de: 'Deutsch',
+  ua: 'Українська',
+  ru: 'Русский',
+  zh: '中文',
+  hi: 'हिन्दी',
+  ar: 'العربية',
+  he: 'עברית',
+};
   
+import { translationsUI } from './translations';
+
+export const tUI = (key: string, lang: LangKey): string => {
+  return translationsUI[key]?.[lang] || translationsUI[key]?.pl || key;
+};
